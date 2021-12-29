@@ -1,4 +1,4 @@
-from myFunctions import *
+import myFunctions as myfuncs
 print('\n')
 while 1:
     print("\t\t\tWelcome to Lloyds bakery.")
@@ -7,19 +7,20 @@ while 1:
     print("\t2 - Don't have an account? Sign up")
     #   ch: string variable which contains '1' if user wishes to sign in, '2' if user wishes to sign up.
     ch = input('\n\t\t')
-    clearscr()
+    myfuncs.clearscr()
 
     #   Checking if userinfo.dat exists, and if it doesn't, initializing it with starting values.
-    initialize()
+    myfuncs.initialize()
 
     #   Signin
     if ch == '1':
-        signin()
+        Active_user = myfuncs.signin()
         break
 
     #   Signup
     elif ch == '2':        
-        signup()
+        myfuncs.signup()
     
     else:
         print("Enter appropriate input\n")
+
