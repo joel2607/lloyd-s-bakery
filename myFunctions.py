@@ -92,3 +92,41 @@ def signup():
         input()
         clearscr()
         break
+
+def signin():
+    with open("userinfo.dat","rb") as User_data_file_obj:
+        Users = pickle.load(User_data_file_obj)
+        
+
+    def findUser(username,users=Users):
+        for user in users:
+            if user['username'] == username:
+                return user
+
+    while 1:
+        print("\t\t\tSign In\n\n")
+        username = input('Username:\t')
+        User = findUser(username)
+
+        if (User is None):              #   User does not exist, findUser() returns None
+            clearscr()
+            print("Username does not exist\n")
+            continue
+            #   Restarts loop and asks for username again
+
+        password = input('Password:\t')
+
+        if password != User['password']:    #   Password incorrect
+            clearscr()
+            print("Incorrect password.\n")
+            continue
+            #   Restarts loop and asks for username again
+        
+        clearscr()
+        print("Sucessfully created account. Press enter to continue")
+        
+        input()
+        clearscr()
+        return User
+
+    
