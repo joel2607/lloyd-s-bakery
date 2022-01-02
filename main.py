@@ -9,7 +9,7 @@ while 1:
     ch = input('\n\t\t')
     myfuncs.clearscr()
 
-    #   Checking if userinfo.dat exists, and if it doesn't, initializing it with starting values.
+    
     myfuncs.initialize()
 
     #   Signin
@@ -24,3 +24,26 @@ while 1:
     else:
         print("Enter appropriate input\n")
 
+while 1:
+    print(f"\t\t\tWelcome to Lloyds bakery, {Active_user['username']}")
+    print("\n\n")
+    print("\t1 - Sales")                        #   Sales Module
+    if Active_user['usertype'] == 'admin':
+        print("\t2 - Stock")                    #   Inventory Module
+
+    #   ch: string variable which contains '1' if user wishes to sign in, '2' if user wishes to sign up.
+    ch = input('\n\t\t')
+    myfuncs.clearscr()
+
+    if ch == '1':
+        pass
+
+    elif ch == '2':
+        myfuncs.inventory()
+
+    else:
+        print("Enter appropriate input\n")
+    
+
+    
+    
