@@ -1,7 +1,11 @@
 import os, pickle, csv
 
-#   Function used to clear screen. Takes no arguments. Returns None.
+inventoryAttributes = ['Item Id', 'Item Name', 'Price', 'Quantity']
+
 def clearscr():  
+
+    """Function used to clear screen. Takes no arguments. Returns None."""
+
     if os.name == 'nt':         #   'nt' is os name for windows systems
         _ = os.system('cls') 
   
@@ -9,12 +13,20 @@ def clearscr():
         _ = os.system('clear')
 
 def initialize():
+    """
+      Checking if userinfo.dat exists, and if it doesn't, initializing it with starting values. Returns None.
+    """
     if not os.path.exists("userinfo.dat"):
         with open("userinfo.dat","wb") as User_data_file_obj:
             Users = [
                 {'username': 'testuser', 'password': 'testpassword', 'usertype':'admin'}
             ]
             pickle.dump(Users,User_data_file_obj)
+
+    if not os.path.exists("inventory.csv"):
+        with open("inventory.csv","w") as inventoryFileObj:
+            inventory = csv.DictWriter(inventoryFileObj, fieldnames=inventoryAttributes)
+            inventory.writeheader()
 
 """
 Users: 
@@ -23,22 +35,26 @@ Users:
 
 User_data_file_obj: 
     File object that stores "userinfo.dat"
-
-username_already_exists():
-    Function which returns True if username already exists. False if not.
-    Defined in line 41.
-    Parameters: 
-        username: Mandatory paramater. The username to check. Type: str
-        users: Optional. Type: List of dictionaries. default: Users
-
 """
 
 def signup():
+    """
+    Returns None. Displays signup screen and appends data to userinfo.dat
+    """
     with open("userinfo.dat","rb") as User_data_file_obj:
         Users = pickle.load(User_data_file_obj)
         
 
     def username_already_exists(username,users=Users):
+
+        """
+        Function which returns True if username already exists. False if not.
+        Defined in line 41.
+        Parameters: 
+            username: Mandatory paramater. The username to check. Type: str
+            users: Optional. Type: List of dictionaries. default: Users
+        """
+
         for user in users:
             if user['username'] == username:
                 return True
@@ -75,6 +91,11 @@ def signup():
         elif user_type_ch == '2':
             New_user['usertype'] = 'regular'
         else:
+            if user_type_ch == '':              #   Exit signup screen if empty input
+                New_user = dict()
+                clearscr()
+                break
+
             clearscr()
             print("Enter valid input.\n")
             continue
@@ -94,6 +115,9 @@ def signup():
         break
 
 def signin():
+    """
+    Asks user for username and password. Logs in if username and password are correct. Returns dictionary of user 
+    """
     with open("userinfo.dat","rb") as User_data_file_obj:
         Users = pickle.load(User_data_file_obj)
         
@@ -106,6 +130,9 @@ def signin():
     while 1:
         print("\t\t\tSign In\n\n")
         username = input('Username:\t')
+        if username == '':              #   Exit login screen if empty input
+            clearscr()
+            break
         User = findUser(username)
 
         if (User is None):              #   User does not exist, findUser() returns None
@@ -115,6 +142,10 @@ def signin():
             #   Restarts loop and asks for username again
 
         password = input('Password:\t')
+        
+        if password == '':              #   Exit login screen if empty input
+            clearscr()
+            break
 
         if password != User['password']:    #   Password incorrect
             clearscr()
@@ -129,4 +160,17 @@ def signin():
         clearscr()
         return User
 
+def findItem(userid):
+    with open('inventory.csv', 'r') as inventoryFileObj:
+        Inventory = csv.DictWriter(inventoryFileObj, fieldnames=inventoryAttributes)
+        for item in Inventory:
+            if item['Item Id'] == userid or item['Item Name'] == userid:
+                return item, False
+        else:
+            return None, True
+
+def writeItem(Item, mode = 'a'):
+    with open('inventory.csv', mode) as InventoryFileObj:
+        Inventory = csv.DictWriter(InventoryFileObj, fieldnames=inventoryAttributes)
+        Inventory.writerow(Item)   
     
