@@ -154,7 +154,7 @@ def signin():
             #   Restarts loop and asks for username again
         
         clearscr()
-        print("Sucessfully created account. Press enter to continue")
+        print("Sucessfully logged in. Press enter to continue")
         
         input()
         clearscr()
@@ -162,15 +162,36 @@ def signin():
 
 def findItem(userid):
     with open('inventory.csv', 'r') as inventoryFileObj:
-        Inventory = csv.DictWriter(inventoryFileObj, fieldnames=inventoryAttributes)
+        Inventory = csv.DictReader(inventoryFileObj, fieldnames=inventoryAttributes)
         for item in Inventory:
             if item['Item Id'] == userid or item['Item Name'] == userid:
-                return item, False
+                return item
         else:
-            return None, True
+            return None
 
 def writeItem(Item, mode = 'a'):
-    with open('inventory.csv', mode) as InventoryFileObj:
-        Inventory = csv.DictWriter(InventoryFileObj, fieldnames=inventoryAttributes)
+    with open('inventory.csv', mode) as inventoryFileObj:
+        Inventory = csv.DictWriter(inventoryFileObj, fieldnames=inventoryAttributes)
         Inventory.writerow(Item)   
+    
+def deleteItem(del_item):
+    with open('inventory.csv', 'r') as inventoryFileObj:
+        Inventory = csv.DictReader(inventoryFileObj, fieldnames=inventoryAttributes)
+        Inventory_contents = []
+        for item in Inventory: Inventory_contents.append(item)
+
+    with open("inventory.csv","w") as inventoryFileObj:
+        inventory = csv.DictWriter(inventoryFileObj, fieldnames=inventoryAttributes)    #   clears contents of file and writes header
+    
+
+    for index in range(len(Inventory_contents)):
+        item = Inventory_contents[index]
+        if del_item['Item Id'] == item['Item Id']:
+            continue
+        writeItem(item)
+
+def modifyItem(item, attribute, value):
+    deleteItem(item)
+    item[attribute] = value
+    writeItem(item)
     
