@@ -1,3 +1,4 @@
+from attr import attr
 import myFunctions as myfuncs
 import csv
 print('\n')
@@ -37,7 +38,7 @@ while 1:
         ch = input('\n\t\t')
         myfuncs.clearscr()
 
-    if ch == '1' and Active_user['usertype'] == 'admin':
+    if Active_user['usertype'] == 'admin' and ch == '1':
 
         while 1:
             print(f"\t\t\tWelcome to Lloyds bakery, {Active_user['username']}")
@@ -73,8 +74,10 @@ while 1:
                     for attribute in myfuncs.inventoryAttributes:
                         newItem[attribute] = input(f'Enter {attribute}: \t')
                     
-                    item = myfuncs.findItem(newItem['Item Id'])
-                    if item is not None:
+                    item_found_by_id = myfuncs.findItem(newItem['Item Id'])
+                    item_found_by_name = myfuncs.findItem(newItem['Item Name'])
+
+                    if item_found_by_id is not None or item_found_by_name is not None:
                         print('\nItem Id and Item name are candidate keys. Duplicate records are not accepted.')
                         input()
                         myfuncs.clearscr()
@@ -89,8 +92,9 @@ while 1:
                     myfuncs.writeItem(newItem)
                     myfuncs.clearscr()
                     print("Want to add more records? y/n")
-                    myfuncs.clearscr()
-                    if input() in 'Nn': break
+                    if input() not in 'yY': 
+                        myfuncs.clearscr()
+                        break
 
             elif action == '3':
                 while 1:
@@ -103,21 +107,34 @@ while 1:
                         continue
                     print("Enter Attribute to be changed:\t")
 
-                    for i in range(myfuncs.inventoryAttributes): print(f'{i+1} - {myfuncs.inventoryAttributes[i]}')
+                    for i in range(len(myfuncs.inventoryAttributes)): print(f'{i+1} - {myfuncs.inventoryAttributes[i]}')
 
-                    attribute_index = input('\t\t') - 1
+                    
+                    try:
+                        attribute_index = int(input('\t\t')) - 1
+                    except TypeError:
+                        print("Enter appropriate input")
+                        myfuncs.clearscr()
+                        continue
+                    finally:
+                        if attribute_index not in range(len(myfuncs.inventoryAttributes)):
+                            print("Enter appropriate input")
+                            myfuncs.clearscr()
+                            continue
 
                     new_value = input("Enter modified value:\t")
 
                     myfuncs.modifyItem(item, myfuncs.inventoryAttributes[attribute_index], new_value)
                     print("Want to search for more records? y/n")
-                    if input() in 'Nn': break
+                    if input() in 'Nn':
+                        myfuncs.clearscr()
+                        break
 
             elif action == '4':
                 while 1:
                     itemid = input('Enter Item ID or Item Name:\t')
                     item = myfuncs.findItem(itemid)
-                    if item is not None: 
+                    if item is None: 
                         print("Item does not exist. Please try again.")
                         input()
                         myfuncs.clearscr()
@@ -129,14 +146,26 @@ while 1:
                     
                     
                     myfuncs.deleteItem(item)
-                    print("Want to search for more records? y/n")
-                    if input() in 'Nn': break
+                    print("Want to delete more records? y/n")
+                    if input() in 'Nn': 
+                        myfuncs.clearscr()
+                        break
+
+                    myfuncs.clearscr()
 
             else:
                 with open('inventory.csv', 'r') as inventoryFileObj:
                     Inventory = csv.DictReader(inventoryFileObj, fieldnames=myfuncs.inventoryAttributes)
+                    print('\n'+105*'-')
                     for item in Inventory:
-                        print(*item.items())
+                        print('|', end = '')
+                        for attribute in item:
+                            print(item[attribute], end = ((25-len(item[attribute]))*' '+'|'))
+                        print('\n'+105*'-')
+
+                    input()
+                    myfuncs.clearscr()
+                    break
 
     elif Active_user['usertype'] == 'regular' or ch == 2:
         pass
