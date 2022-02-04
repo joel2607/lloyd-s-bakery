@@ -1,6 +1,7 @@
 from attr import attr
 import myFunctions as myfuncs
 import csv
+
 print('\n')
 while 1:
     print("\t\t\tWelcome to Lloyds bakery.")
@@ -11,7 +12,6 @@ while 1:
     ch = input('\n\t\t')
     myfuncs.clearscr()
 
-    
     myfuncs.initialize()
 
     #   Signin
@@ -20,9 +20,9 @@ while 1:
         break
 
     #   Signup
-    elif ch == '2':        
+    elif ch == '2':
         myfuncs.signup()
-    
+
     else:
         print("Enter appropriate input\n")
 
@@ -30,9 +30,9 @@ while 1:
     print(f"\t\t\tWelcome to Lloyds bakery, {Active_user['username']}")
     print("\n\n")
     if Active_user['usertype'] == 'admin':
-        print("\t1 - Stock")                        #   Sales Module
-    
-        print("\t2 - Sales")                    #   Inventory Module
+        print("\t1 - Stock")  #   Sales Module
+
+        print("\t2 - Sales")  #   Inventory Module
 
         #   ch: string variable which contains '1' if user wishes to sign in, '2' if user wishes to sign up.
         ch = input('\n\t\t')
@@ -43,11 +43,11 @@ while 1:
         while 1:
             print(f"\t\t\tWelcome to Lloyds bakery, {Active_user['username']}")
             print("\n\n")
-            print("\t1 - Search for item") 
+            print("\t1 - Search for item")
             print("\t2 - Create new item")
             print("\t3 - Modify existing item")
             print("\t4 - Delete existing item")
-            print("\t5 - Display Inventory")   
+            print("\t5 - Display Inventory")
 
             action = input('\n\t\t')
             myfuncs.clearscr()
@@ -56,7 +56,7 @@ while 1:
                 while 1:
                     itemid = input('Enter Item ID or Item Name:\t')
                     item = myfuncs.findItem(itemid)
-                    if item is None: 
+                    if item is None:
                         print("Item does not exist. Please try again.")
                         input()
                         myfuncs.clearscr()
@@ -67,23 +67,26 @@ while 1:
                     print("Want to search for more records? y/n")
                     if input() in 'Nn': break
 
-
             elif action == '2':
                 while 1:
                     newItem = dict()
                     for attribute in myfuncs.inventoryAttributes:
                         newItem[attribute] = input(f'Enter {attribute}: \t')
-                    
+
                     item_found_by_id = myfuncs.findItem(newItem['Item Id'])
                     item_found_by_name = myfuncs.findItem(newItem['Item Name'])
 
                     if item_found_by_id is not None or item_found_by_name is not None:
-                        print('\nItem Id and Item name are candidate keys. Duplicate records are not accepted.')
+                        print(
+                            '\nItem Id and Item name are candidate keys. Duplicate records are not accepted.'
+                        )
                         input()
                         myfuncs.clearscr()
                         continue
-                    
-                    if int(newItem['Item Id']) < 0 or int(newItem['Price']) < 0 or int(newItem['Quantity']) < 0:
+
+                    if int(newItem['Item Id']) < 0 or int(
+                            newItem['Price']) < 0 or int(
+                                newItem['Quantity']) < 0:
                         print('\nEnter appropriate value.')
                         input()
                         myfuncs.clearscr()
@@ -92,7 +95,7 @@ while 1:
                     myfuncs.writeItem(newItem)
                     myfuncs.clearscr()
                     print("Want to add more records? y/n")
-                    if input() not in 'yY': 
+                    if input() not in 'yY':
                         myfuncs.clearscr()
                         break
 
@@ -100,16 +103,16 @@ while 1:
                 while 1:
                     itemid = input('Enter Item ID or Item Name:\t')
                     item = myfuncs.findItem(itemid)
-                    if item is None: 
+                    if item is None:
                         print("Item does not exist. Please try again.")
                         input()
                         myfuncs.clearscr()
                         continue
                     print("Enter Attribute to be changed:\t")
 
-                    for i in range(len(myfuncs.inventoryAttributes)): print(f'{i+1} - {myfuncs.inventoryAttributes[i]}')
+                    for i in range(len(myfuncs.inventoryAttributes)):
+                        print(f'{i+1} - {myfuncs.inventoryAttributes[i]}')
 
-                    
                     try:
                         attribute_index = int(input('\t\t')) - 1
                     except TypeError:
@@ -117,14 +120,17 @@ while 1:
                         myfuncs.clearscr()
                         continue
                     finally:
-                        if attribute_index not in range(len(myfuncs.inventoryAttributes)):
+                        if attribute_index not in range(
+                                len(myfuncs.inventoryAttributes)):
                             print("Enter appropriate input")
                             myfuncs.clearscr()
                             continue
 
                     new_value = input("Enter modified value:\t")
 
-                    myfuncs.modifyItem(item, myfuncs.inventoryAttributes[attribute_index], new_value)
+                    myfuncs.modifyItem(
+                        item, myfuncs.inventoryAttributes[attribute_index],
+                        new_value)
                     print("Want to search for more records? y/n")
                     if input() in 'Nn':
                         myfuncs.clearscr()
@@ -134,7 +140,7 @@ while 1:
                 while 1:
                     itemid = input('Enter Item ID or Item Name:\t')
                     item = myfuncs.findItem(itemid)
-                    if item is None: 
+                    if item is None:
                         print("Item does not exist. Please try again.")
                         input()
                         myfuncs.clearscr()
@@ -143,11 +149,10 @@ while 1:
                     for attribute in item:
                         print(f'{attribute} : {item[attribute]}')
                     if input() not in 'Yy': continue
-                    
-                    
+
                     myfuncs.deleteItem(item)
                     print("Want to delete more records? y/n")
-                    if input() in 'Nn': 
+                    if input() in 'Nn':
                         myfuncs.clearscr()
                         break
 
@@ -155,20 +160,88 @@ while 1:
 
             else:
                 with open('inventory.csv', 'r') as inventoryFileObj:
-                    Inventory = csv.DictReader(inventoryFileObj, fieldnames=myfuncs.inventoryAttributes)
-                    print('\n'+105*'-')
+                    Inventory = csv.DictReader(
+                        inventoryFileObj,
+                        fieldnames=myfuncs.inventoryAttributes)
+                    print('\n' + 105 * '-')
                     for item in Inventory:
-                        print('|', end = '')
+                        print('|', end='')
                         for attribute in item:
-                            print(item[attribute], end = ((25-len(item[attribute]))*' '+'|'))
-                        print('\n'+105*'-')
+                            print(item[attribute],
+                                  end=((25 - len(item[attribute])) * ' ' +
+                                       '|'))
+                        print('\n' + 105 * '-')
 
                     input()
                     myfuncs.clearscr()
                     break
 
-    elif Active_user['usertype'] == 'regular' or ch == 2:
-        pass
+    elif Active_user['usertype'] == 'regular' or ch == "2":
+        while 1:
+            print(f"\t\t\tWelcome to Lloyds bakery, {Active_user['username']}")
+            print("\n\n")
+            print("\t1 - Display Inventory")
+            print("\t2 - Buy Item")
+            print("\t3 = Generate Receipt")
+
+            action = input('\n\t\t')
+            myfuncs.clearscr()
+
+            if action == '1':
+                  with open('inventory.csv', 'r') as inventoryFileObj:
+                    Inventory = csv.DictReader(
+                        inventoryFileObj,
+                        fieldnames=myfuncs.inventoryAttributes)
+                    print('\n' + 105 * '-')
+                    for item in Inventory:
+                        print('|', end='')
+                        for attribute in item:
+                            print(item[attribute],
+                                  end=((25 - len(item[attribute])) * ' ' +
+                                       '|'))
+                        print('\n' + 105 * '-')
+
+                    input()
+                    myfuncs.clearscr()
+                    break
+
+            elif action == "2":
+                with open('inventory.csv', 'r') as inventoryFileObj:
+                    Inventory = csv.DictReader(
+                        inventoryFileObj,
+                        fieldnames=myfuncs.inventoryAttributes)
+                    print('\n' + 105 * '-')
+                    for item in Inventory:
+                        print('|', end='')
+                        for attribute in item:
+                            print(item[attribute],
+                                  end=((25 - len(item[attribute])) * ' ' +
+                                       '|'))
+                        print('\n' + 105 * '-')
+
+
+                    
+
+                    while 1:
+                        itemid = input('Enter Item ID or Item Name to be bought:\t')
+                        item = myfuncs.findItem(itemid)
+                        if item is None:
+                            print("Item does not exist. Please try again.")
+                            input()
+                            
+                            continue
+
+                        new_value = input("Enter purchase quantity:\t")
+
+                        myfuncs.modifyItem(
+                            item, myfuncs.inventoryAttributes[3],
+                            new_value)
+                        print("Want to buy additional items? y/n")
+                          
+                        if input() in 'Nn':
+                            
+                            
+                            break
 
     else:
         myfuncs.clearscr()
