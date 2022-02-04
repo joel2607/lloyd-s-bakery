@@ -119,12 +119,12 @@ while 1:
                         print("Enter appropriate input")
                         myfuncs.clearscr()
                         continue
-                    finally:
-                        if attribute_index not in range(
-                                len(myfuncs.inventoryAttributes)):
-                            print("Enter appropriate input")
-                            myfuncs.clearscr()
-                            continue
+                        
+                    if attribute_index not in range(
+                            len(myfuncs.inventoryAttributes)):
+                        print("Enter appropriate input")
+                        myfuncs.clearscr()
+                        continue
 
                     new_value = input("Enter modified value:\t")
 
