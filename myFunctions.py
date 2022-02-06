@@ -194,4 +194,18 @@ def modifyItem(item, attribute, value):
     deleteItem(item)
     item[attribute] = value
     writeItem(item)
+
+def printInventory():
+    with open('inventory.csv', 'r') as inventoryFileObj:
+        Inventory = csv.DictReader(
+            inventoryFileObj,
+            fieldnames=inventoryAttributes)
+        print('\n' + (21*len(inventoryAttributes)+1) * '-')
+        for item in Inventory:
+            print('|', end='')
+            for attribute in item:
+                print(item[attribute],
+                        end=((20 - len(item[attribute])) * ' ' +
+                            '|'))
+            print('\n' + (21*len(inventoryAttributes)+1) * '-')
     

@@ -1,4 +1,3 @@
-from attr import attr
 import myFunctions as myfuncs
 import csv
 
@@ -159,22 +158,11 @@ while 1:
                     myfuncs.clearscr()
 
             else:
-                with open('inventory.csv', 'r') as inventoryFileObj:
-                    Inventory = csv.DictReader(
-                        inventoryFileObj,
-                        fieldnames=myfuncs.inventoryAttributes)
-                    print('\n' + 105 * '-')
-                    for item in Inventory:
-                        print('|', end='')
-                        for attribute in item:
-                            print(item[attribute],
-                                  end=((25 - len(item[attribute])) * ' ' +
-                                       '|'))
-                        print('\n' + 105 * '-')
+                myfuncs.printInventory()
 
-                    input()
-                    myfuncs.clearscr()
-                    break
+                input()
+                myfuncs.clearscr()
+                break
 
     elif Active_user['usertype'] == 'regular' or ch == "2":
         while 1:
@@ -188,60 +176,34 @@ while 1:
             myfuncs.clearscr()
 
             if action == '1':
-                  with open('inventory.csv', 'r') as inventoryFileObj:
-                    Inventory = csv.DictReader(
-                        inventoryFileObj,
-                        fieldnames=myfuncs.inventoryAttributes)
-                    print('\n' + 105 * '-')
-                    for item in Inventory:
-                        print('|', end='')
-                        for attribute in item:
-                            print(item[attribute],
-                                  end=((25 - len(item[attribute])) * ' ' +
-                                       '|'))
-                        print('\n' + 105 * '-')
+                myfuncs.printInventory()
 
-                    input()
-                    myfuncs.clearscr()
-                    break
+                input()
+                myfuncs.clearscr()
+                break
 
             elif action == "2":
-                with open('inventory.csv', 'r') as inventoryFileObj:
-                    Inventory = csv.DictReader(
-                        inventoryFileObj,
-                        fieldnames=myfuncs.inventoryAttributes)
-                    print('\n' + 105 * '-')
-                    for item in Inventory:
-                        print('|', end='')
-                        for attribute in item:
-                            print(item[attribute],
-                                  end=((25 - len(item[attribute])) * ' ' +
-                                       '|'))
-                        print('\n' + 105 * '-')
+                myfuncs.printInventory()
+                while 1:
+                    itemid = input('Enter Item ID or Item Name to be bought:\t')
+                    item = myfuncs.findItem(itemid)
+                    if item is None:
+                        print("Item does not exist. Please try again.")
+                        input()
+                        
+                        continue
 
+                    quanity_purchased = input("Enter purchase quantity:\t")
 
-                    
-
-                    while 1:
-                        itemid = input('Enter Item ID or Item Name to be bought:\t')
-                        item = myfuncs.findItem(itemid)
-                        if item is None:
-                            print("Item does not exist. Please try again.")
-                            input()
-                            
-                            continue
-
-                        new_value = input("Enter purchase quantity:\t")
-
-                        myfuncs.modifyItem(
-                            item, myfuncs.inventoryAttributes[3],
-                            new_value)
-                        print("Want to buy additional items? y/n")
-                          
-                        if input() in 'Nn':
-                            
-                            
-                            break
+                    myfuncs.modifyItem(
+                        item, 'Quantity',
+                        item['Quanity'] - quanity_purchased)
+                    print("Want to buy additional items? y/n")
+                        
+                    if input() in 'Nn':
+                        
+                        
+                        break
 
     else:
         myfuncs.clearscr()
