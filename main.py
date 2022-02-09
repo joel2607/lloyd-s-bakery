@@ -170,7 +170,7 @@ while 1:
             print("\n\n")
             print("\t1 - Display Inventory")
             print("\t2 - Buy Item")
-            print("\t3 = Generate Receipt")
+            print("\t3 - Generate Sales Report")
 
             action = input('\n\t\t')
             myfuncs.clearscr()
@@ -193,17 +193,26 @@ while 1:
                         
                         continue
 
-                    quanity_purchased = input("Enter purchase quantity:\t")
+                    quanity_purchased = int(input("Enter purchase quantity:\t"))
 
-                    myfuncs.modifyItem(
-                        item, 'Quantity',
-                        item['Quanity'] - quanity_purchased)
-                    print("Want to buy additional items? y/n")
+                    if quanity_purchased<=int(item['Quantity']):
+
+                      myfuncs.modifyItem(item, 'Quantity', int(item['Quantity']) - quanity_purchased)
+                      print("Want to buy additional items? y/n")
+
+                      dict = {itemid, quanity_purchased}
+                      myfuncs.writeItem_sales(dict)
+                      
                         
-                    if input() in 'Nn':
+                      if input() in 'Nn':
                         
                         
-                        break
+                            break
+                    else:
+                      print("Not enough stock is available for that item")
+                      continue
+            elif action =="3":
+              myfuncs.printSales()
 
     else:
         myfuncs.clearscr()
