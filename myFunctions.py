@@ -211,7 +211,7 @@ def printInventory():
 
 
 #SALES FROM NOW ONWARDS
-def printSales():
+def showSales():
   with open('sales.csv', 'r') as inventoryFileObj:
         Inventory = csv.DictReader(
             inventoryFileObj,
@@ -225,21 +225,10 @@ def printSales():
                             '|'))
             print('\n' + (21*len(inventoryAttributes)+1) * '-')
 
-def writeItem_sales(Item, mode = 'a'):
+        
+
+def writeTransaction(Item, mode = 'a'):
     with open('sales.csv', mode) as inventoryFileObj:
-        Inventory = csv.DictWriter(inventoryFileObj, fieldnames=inventoryAttributes)
+        Inventory = csv.DictWriter(inventoryFileObj, ["Item ID","Item Name","Quantity","Price","Timestamp"])
         Inventory.writerow(Item)
 
-def deleteItem_sales(del_item):
-    with open('sales.csv', 'r') as inventoryFileObj:
-        Inventory = csv.DictReader(inventoryFileObj, fieldnames=inventoryAttributes)
-        Inventory_contents = []
-        for item in Inventory: Inventory_contents.append(item)
-
-    with open("inventory.csv","w") as inventoryFileObj:
-        inventory = csv.DictWriter(inventoryFileObj, fieldnames=inventoryAttributes)
-
-def modifyItem_sales(item, attribute, value):
-    deleteItem_sales(item)
-    item[attribute] = value
-    writeItem_sales(item)

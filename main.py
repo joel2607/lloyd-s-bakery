@@ -1,5 +1,7 @@
 import myFunctions as myfuncs
 import csv
+import datetime
+
 
 print('\n')
 while 1:
@@ -194,14 +196,21 @@ while 1:
                         continue
 
                     quanity_purchased = int(input("Enter purchase quantity:\t"))
+                    print(quanity_purchased, item['Quantity'])
 
                     if quanity_purchased<=int(item['Quantity']):
 
                       myfuncs.modifyItem(item, 'Quantity', int(item['Quantity']) - quanity_purchased)
                       print("Want to buy additional items? y/n")
 
-                      dict = {itemid, quanity_purchased}
-                      myfuncs.writeItem_sales(dict)
+                      item_name = item["Item Name"]
+                      item_id = item["Item Id"]
+                      item_price = item["Price"]
+                      current_timestamp = datetime.datetime.now()
+                      current_timestamp_modded = current_timestamp.replace(microsecond = 0)
+                      
+                      sales_update = {"Item ID":item_id, "Item Name":item_name, "Quantity":quanity_purchased,"Price":item_price, "Timestamp":str(current_timestamp_modded)}
+                      myfuncs.writeTransaction(sales_update)
                       
                         
                       if input() in 'Nn':
@@ -211,8 +220,9 @@ while 1:
                     else:
                       print("Not enough stock is available for that item")
                       continue
+                      
             elif action =="3":
-              myfuncs.printSales()
+              myfuncs.showSales()
 
     else:
         myfuncs.clearscr()
