@@ -208,4 +208,27 @@ def printInventory():
                         end=((20 - len(item[attribute])) * ' ' +
                             '|'))
             print('\n' + (21*len(inventoryAttributes)+1) * '-')
-    
+
+
+#SALES FROM NOW ONWARDS
+def showSales():
+  with open('sales.csv', 'r') as inventoryFileObj:
+        Inventory = csv.DictReader(
+            inventoryFileObj,
+            fieldnames=inventoryAttributes)
+        print('\n' + (21*len(inventoryAttributes)+1) * '-')
+        for item in Inventory:
+            print('|', end='')
+            for attribute in item:
+                print(item[attribute],
+                        end=((20 - len(item[attribute])) * ' ' +
+                            '|'))
+            print('\n' + (21*len(inventoryAttributes)+1) * '-')
+
+        
+
+def writeTransaction(Item, mode = 'a'):
+    with open('sales.csv', mode) as inventoryFileObj:
+        Inventory = csv.DictWriter(inventoryFileObj, ["Item ID","Item Name","Quantity","Price","Timestamp"])
+        Inventory.writerow(Item)
+

@@ -1,5 +1,7 @@
 import myFunctions as myfuncs
 import csv
+import datetime
+
 
 print('\n')
 while 1:
@@ -170,7 +172,7 @@ while 1:
             print("\n\n")
             print("\t1 - Display Inventory")
             print("\t2 - Buy Item")
-            print("\t3 = Generate Receipt")
+            print("\t3 - Generate Sales Report")
 
             action = input('\n\t\t')
             myfuncs.clearscr()
@@ -193,17 +195,34 @@ while 1:
                         
                         continue
 
-                    quanity_purchased = input("Enter purchase quantity:\t")
+                    quanity_purchased = int(input("Enter purchase quantity:\t"))
+                    print(quanity_purchased, item['Quantity'])
 
-                    myfuncs.modifyItem(
-                        item, 'Quantity',
-                        item['Quanity'] - quanity_purchased)
-                    print("Want to buy additional items? y/n")
+                    if quanity_purchased<=int(item['Quantity']):
+
+                      myfuncs.modifyItem(item, 'Quantity', int(item['Quantity']) - quanity_purchased)
+                      print("Want to buy additional items? y/n")
+
+                      item_name = item["Item Name"]
+                      item_id = item["Item Id"]
+                      item_price = item["Price"]
+                      current_timestamp = datetime.datetime.now()
+                      current_timestamp_modded = current_timestamp.replace(microsecond = 0)
+                      
+                      sales_update = {"Item ID":item_id, "Item Name":item_name, "Quantity":quanity_purchased,"Price":item_price, "Timestamp":str(current_timestamp_modded)}
+                      myfuncs.writeTransaction(sales_update)
+                      
                         
-                    if input() in 'Nn':
+                      if input() in 'Nn':
                         
                         
-                        break
+                            break
+                    else:
+                      print("Not enough stock is available for that item")
+                      continue
+                      
+            elif action =="3":
+              myfuncs.showSales()
 
     else:
         myfuncs.clearscr()
