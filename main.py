@@ -1,5 +1,4 @@
 import myFunctions as myfuncs
-import csv
 import datetime
 
 
@@ -35,6 +34,8 @@ while 1:
 
         print("\t2 - Sales")  #   Inventory Module
 
+        print("\t3 - Back")
+
         #   ch: string variable which contains '1' if user wishes to sign in, '2' if user wishes to sign up.
         ch = input('\n\t\t')
         myfuncs.clearscr()
@@ -49,6 +50,7 @@ while 1:
             print("\t3 - Modify existing item")
             print("\t4 - Delete existing item")
             print("\t5 - Display Inventory")
+            print("\t6 - Back")
 
             action = input('\n\t\t')
             myfuncs.clearscr()
@@ -66,7 +68,10 @@ while 1:
                     for attribute in item:
                         print(f'{attribute} : {item[attribute]}')
                     print("Want to search for more records? y/n")
-                    if input() in 'Nn': break
+                    if input() in 'Nn': 
+                        myfuncs.clearscr()
+                        break
+                    myfuncs.clearscr()
 
             elif action == '2':
                 while 1:
@@ -99,6 +104,7 @@ while 1:
                     if input() not in 'yY':
                         myfuncs.clearscr()
                         break
+                    myfuncs.clearscr()
 
             elif action == '3':
                 while 1:
@@ -136,6 +142,7 @@ while 1:
                     if input() in 'Nn':
                         myfuncs.clearscr()
                         break
+                    myfuncs.clearscr()
 
             elif action == '4':
                 while 1:
@@ -158,10 +165,19 @@ while 1:
                         break
 
                     myfuncs.clearscr()
+            
+            elif action == '5':
+                myfuncs.printInventory()
+                input()
+                myfuncs.clearscr()
+                break
+
+            elif action == '6':
+                myfuncs.clearscr()
+                break
 
             else:
-                myfuncs.printInventory()
-
+                print('Enter appropriate output')
                 input()
                 myfuncs.clearscr()
                 break
@@ -173,6 +189,7 @@ while 1:
             print("\t1 - Display Inventory")
             print("\t2 - Buy Item")
             print("\t3 - Generate Sales Report")
+            print('\t4 - Back')
 
             action = input('\n\t\t')
             myfuncs.clearscr()
@@ -185,44 +202,66 @@ while 1:
                 break
 
             elif action == "2":
-                myfuncs.printInventory()
+                
                 while 1:
+                    myfuncs.printInventory()
                     itemid = input('Enter Item ID or Item Name to be bought:\t')
                     item = myfuncs.findItem(itemid)
                     if item is None:
                         print("Item does not exist. Please try again.")
                         input()
-                        
+                        myfuncs.clearscr()
                         continue
 
-                    quanity_purchased = int(input("Enter purchase quantity:\t"))
-                    print(quanity_purchased, item['Quantity'])
+                    try: quantity_purchased = int(input("Enter purchase quantity:\t"))
+                    except ValueError: 
+                        print('Enter appropriate value.')
+                        input()
+                        myfuncs.clearscr()
+                        continue
 
-                    if quanity_purchased<=int(item['Quantity']):
+                    if quantity_purchased<=int(item['Quantity']):
+                        myfuncs.modifyItem(item, 'Quantity', int(item['Quantity']) - quantity_purchased)
+                        
+                        item_name = item["Item Name"]
+                        item_id = item["Item Id"]
+                        item_price = item["Price"]
+                        current_timestamp = datetime.datetime.now()
+                        current_timestamp_modded = current_timestamp.replace(microsecond = 0)
+                        
+                        sales_update = {
+                            "Item ID":item_id, 
+                            "Item Name":item_name, 
+                            "Quantity":quantity_purchased,
+                            "Price":item_price, 
+                            'Amount': float(item_price)*quantity_purchased,
+                            "Timestamp":str(current_timestamp_modded)
+                            }
+                        myfuncs.writeTransaction(sales_update)
 
-                      myfuncs.modifyItem(item, 'Quantity', int(item['Quantity']) - quanity_purchased)
-                      print("Want to buy additional items? y/n")
-
-                      item_name = item["Item Name"]
-                      item_id = item["Item Id"]
-                      item_price = item["Price"]
-                      current_timestamp = datetime.datetime.now()
-                      current_timestamp_modded = current_timestamp.replace(microsecond = 0)
                       
-                      sales_update = {"Item ID":item_id, "Item Name":item_name, "Quantity":quanity_purchased,"Price":item_price, "Timestamp":str(current_timestamp_modded)}
-                      myfuncs.writeTransaction(sales_update)
-                      
-                        
-                      if input() in 'Nn':
-                        
-                        
+                        ch = input('Would you like to continue your shopping? y/n') 
+                        if ch in 'Nn':
+                            myfuncs.clearscr()
                             break
+                        myfuncs.clearscr()
                     else:
-                      print("Not enough stock is available for that item")
-                      continue
+                        print("Not enough stock is available for that item")
+                        continue
                       
             elif action =="3":
-              myfuncs.showSales()
+                myfuncs.showSales()
+                print(f'Total sales: {myfuncs.totalFinder()}')
+                input()
+                myfuncs.clearscr()
+                
+            elif action == '4':
+                myfuncs.clearscr()
+                break
+    
+    elif ch == '3':
+        myfuncs.clearscr()
+        break
 
     else:
         myfuncs.clearscr()

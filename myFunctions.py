@@ -1,8 +1,7 @@
 import os, pickle, csv
 
-inventoryAttributes = ['Item Id', 'Item Name', 'Price', 'Quantity']
-
-salesAttributes = ["Item ID","Item Name","Quantity","Price","Timestamp"]
+inventoryAttributes = ['Item Id', 'Item Name', 'Price', 'Quantity', 'Manufacture Date', 'Expiry Date']
+salesAttributes = ["Item ID","Item Name","Quantity","Price",'Amount',"Timestamp"]
 
 def clearscr():  
 
@@ -29,6 +28,11 @@ def initialize():
         with open("inventory.csv","w") as inventoryFileObj:
             inventory = csv.DictWriter(inventoryFileObj, fieldnames=inventoryAttributes)
             inventory.writeheader()
+
+    if not os.path.exists("isales.csv"):
+        with open("sales.csv","w") as salesFileObj:
+            sales = csv.DictWriter(salesFileObj, fieldnames=salesAttributes)
+            sales.writeheader()
 
 """
 Users: 
@@ -234,3 +238,12 @@ def writeTransaction(Item, mode = 'a'):
         Inventory = csv.DictWriter(inventoryFileObj, salesAttributes)
         Inventory.writerow(Item)
 
+def totalFinder():
+    with open('sales.csv', 'r') as salesFileObj:
+        sales = csv.DictReader(salesFileObj, fieldnames=salesAttributes)
+        total = 0
+        for item in sales:
+            try: total+=float(item["Amount"])
+            except ValueError:
+                pass
+    return total
