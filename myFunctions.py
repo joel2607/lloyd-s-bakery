@@ -2,6 +2,8 @@ import os, pickle, csv
 
 inventoryAttributes = ['Item Id', 'Item Name', 'Price', 'Quantity']
 
+salesAttributes = ["Item ID","Item Name","Quantity","Price","Timestamp"]
+
 def clearscr():  
 
     """Function used to clear screen. Takes no arguments. Returns None."""
@@ -229,6 +231,6 @@ def showSales():
 
 def writeTransaction(Item, mode = 'a'):
     with open('sales.csv', mode) as inventoryFileObj:
-        Inventory = csv.DictWriter(inventoryFileObj, ["Item ID","Item Name","Quantity","Price","Timestamp"])
+        Inventory = csv.DictWriter(inventoryFileObj, salesAttributes)
         Inventory.writerow(Item)
 
