@@ -247,6 +247,8 @@ while 1:
                         myfuncs.clearscr()
                     else:
                         print("Not enough stock is available for that item")
+                        input()
+                        myfuncs.clearscr()
                         continue
                       
             elif action =="3":
