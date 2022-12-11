@@ -1,3 +1,3 @@
 # lloyds-bakery
 
-A python based bakery management system that use CSV files as a backend.
+A python based command line bakery management system that use CSV files as a backend.
